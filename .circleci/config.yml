@@ -50,6 +50,13 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: cat ~/output.txt
+
+# Anchor test job
+  my_anchorTest:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - print_pipeline_id
       
 workflows:
   # Name the workflow "welcome"
@@ -66,3 +73,4 @@ workflows:
       - print_output_file:
           requires:
             - save_hello_world_output
+      - my_anchorTest
