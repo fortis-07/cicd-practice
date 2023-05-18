@@ -31,7 +31,6 @@ jobs:
           name: "echo an env var that is part of our project"
           command: |
             echo $MY_ENV_VAR
-
 # Sharing files
   save_hello_world_output:
     docker:
@@ -50,13 +49,22 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: cat ~/output.txt
-
 # Anchor test job
   my_anchorTest:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - print_pipeline_id
+# Test error job with non-zero exit code
+  errorTest:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: exit 1
+      - run:
+          name: on error
+          command: echo "Hello Error!"
+          when: on_fail
       
 workflows:
   # Name the workflow "welcome"
@@ -74,3 +82,4 @@ workflows:
           requires:
             - save_hello_world_output
       - my_anchorTest
+      - errorTest
